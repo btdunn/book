@@ -8,6 +8,7 @@
         v-for="(book, index) in books"
         :key="index"
         :book="book"
+        :favorite="favorite"
       />
     </div>
   </template>
@@ -18,6 +19,8 @@ import { useApi } from '../store/useApi'
 
 const api = useApi()
 const books = ref(api.books)
+const favorite = ref(api.userFav ? api.userFav : '')
+
 </script>
 
 <style lang="scss">

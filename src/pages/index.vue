@@ -11,6 +11,9 @@
             <input id="username" v-model="username" />
             <label for="password">Password</label>
             <input id="password" type="password" v-model="password" />
+            <div class="error-box">
+              <p v-if="error" class="error">Incorrect&nbsp;Password</p>
+            </div>
           </form>
         </template>
         <template v-else>
@@ -19,6 +22,9 @@
             <input id="username" v-model="username" />
             <label for="password">Password</label>
             <input id="password" type="password" v-model="password" />
+            <div class="error-box">
+              <p v-if="error" class="error">Please try again</p>
+            </div>
           </form>
         </template>
         <p  @click="toggleLogin" class="switch">{{ login ? 'Not a member? Sign Up' : 'Already a member? Login' }}</p>
@@ -46,21 +52,44 @@ const login = ref(false)
 const valid = computed(() =>  username.value.length > 1 && password.value.length > 1)
 const username = ref('')
 const password = ref('')
+const error = ref(false)
 
 
 function toggleLogin() {
   login.value = !login.value
 }
 
-const submitForm = async () => {
-  const user = {username: username.value, password: password.value}
+function showError() {
+  error.value = true
+  setTimeout(() => {
+    error.value = false
+  }, 2000)
+}
 
-  if (login) {
-    api.login(user)
-    await navigateTo('/books')
+const submitForm = async () => {
+  const user = {username: username.value, password: password.value, favorite: ''}
+  
+  if (login.value) {
+    await api.getFavorite(username.value)
+      .then((result) => { user.favorite = result.book })
+      .catch((error) => console.error(error))
+    await api.login(user)
+    .then((result) => {
+      navigateTo('/books')
+    })
+    .catch((error) => {
+      showError()
+      console.error(error)
+    })
   } else {
-    api.createUser(user)
-    await navigateTo('/books')
+    await api.createUser(user)
+      .then((result) => {
+        navigateTo('/books')
+      })
+      .catch((error) => {
+        showError()
+        console.error(error)
+      })
   }
 }
 
@@ -141,6 +170,22 @@ html {
           border-color: #718FEF;
         }
       }
+
+      .error-box {
+        position: relative;
+        width: 0;
+        height: 0;
+
+        .error {
+          position: absolute;
+          bottom: -2.5rem;
+          left: 1rem;
+          width: fit-content;
+          color: red;
+          font-family: sans-serif;
+        }
+      }
+
     }
 
     .submit {
