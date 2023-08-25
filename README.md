@@ -1,63 +1,22 @@
-# Nuxt 3 Minimal Starter
+# Book Practice
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A sign-up/login page followed by a landing page displaying books. Users can favorite books by clicking them!
 
 ## Setup
 
 Make sure to install the dependencies:
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+To run the GUI:
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
 ```
 
-## Production
+The API:
 
-Build the application for production:
+https://github.com/book-io/web-interview-project-signup-wizard
 
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
