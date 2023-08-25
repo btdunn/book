@@ -31,7 +31,8 @@ export const useApi = defineStore('api', {
   state: () => 
     ({
       books: [] as Book[],
-      user: ''
+      user: '',
+      userFav: ''
     }),
   actions: {
     poll() {
@@ -43,7 +44,11 @@ export const useApi = defineStore('api', {
     async getBooks() {
       const response = await fetch(api + apiDefinition.getBooks.url)
       const books = await response.json()
-      return books.data.books
+      if (books) {
+        return books.data.books
+      } else {
+        return { message: 'error' }
+      }
     },
     async createUser(user: User) {
       const newUser = { username: user.username, password: user.password }
@@ -56,7 +61,12 @@ export const useApi = defineStore('api', {
       })
       const result = await response.json()
       this.user = newUser.username
-      console.log(result)
+
+      if (result) {
+        return result
+      } else {
+        return { message: 'error' }
+      }
     },
     async createFavorite(user: string, bookId: string) {
       const response = await fetch(api + apiDefinition.createFavorite.url + `/${user}` + '/favorites', {
@@ -69,16 +79,24 @@ export const useApi = defineStore('api', {
         }),
       })
       const result = await response.json()
-      console.log(result)
+
+      if (result) {
+        return result
+      } else {
+        return { message: 'error' }
+      }
     },
     async getFavorite(user: string) {
       const response = await fetch(api + apiDefinition.getFavorite.url + `/${user}` + '/favorites')
       const result = await response.json()
-      console.log(result)
-      return result.data.favorite
+      if (result) {
+        return result.data.favorites
+      } else {
+        return { message: 'error' }
+      }
     },
     async login(user: User) {
-      const login = { username: user.username, password: user.password }
+      const login = { username: user.username, password: user.password, favorite: user.favorite }
       const response = await fetch(api + apiDefinition.login.url, {
         method: apiDefinition.login.method,
         headers: {
@@ -88,7 +106,13 @@ export const useApi = defineStore('api', {
       })
       const result = await response.json()
       this.user = login.username
-      console.log(result)
+      this.userFav = login.favorite ? login.favorite : ''
+
+      if (result) {
+        return result
+      } else {
+        return { message: 'error' }
+      }
     },
   }
 })
